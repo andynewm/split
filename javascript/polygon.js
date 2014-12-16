@@ -1,4 +1,7 @@
-(function () {
+/* exported Polygon */
+
+var Polygon = (function () {
+	'use strict';
 
 	//poly is [[x,y], ... ]
 	function area(poly) {
@@ -11,9 +14,7 @@
 		}, 0) / 2;
 	}
 
-	
-
-	function spilt(poly, line) {
+	function split(poly, line) {
 		var polyWithSide = poly.map(function (point) {
 			var side = getSide(point, line);
 
@@ -29,9 +30,9 @@
 		var prevPoint = polyWithSide[polyWithSide.length - 1];
 
 		polyWithSide.forEach(function (point) {
-			if (prevPoint.side != point.side) {
+			if (prevPoint.side !== point.side) {
 				var intersect = intersection(
-					[prevPoint.point, point.point]
+					[prevPoint.point, point.point],
 					line);
 
 				a.push(intersect);
@@ -71,5 +72,10 @@
 			(ca * by - cb * ay) / l
 		];
 	}
+
+	return {
+		area: area,
+		split: split
+	};
 
 }());
