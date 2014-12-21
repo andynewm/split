@@ -4,9 +4,19 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     livereload = require('gulp-livereload'),
     rename = require('gulp-rename'),
-    del = require('del');
+	typescript = require('gulp-tsc'),
+    del = require('del'),
+	karma = require('karma').server,
+	plumber = require('gulp-plumber');
 
-gulp.task('default', ['scripts', 'html']);
+gulp.task('default', ['test', 'html']);
+
+gulp.task('vendor', function () {
+	return gulp.src(['bower_components/jquery/dist/jquery.js'])
+		.pipe(concat('vendor.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest('public/js'));
+});
 
 gulp.task('scripts', function() {
 	return gulp.src('javascript/*.js')
@@ -19,18 +29,53 @@ gulp.task('scripts', function() {
 		.pipe(gulp.dest('public/js'));
 });
 
+gulp.task('typescript', function() {
+	return gulp.src(['src/app.ts'])
+		.pipe(plumber())
+		.pipe(typescript({
+			target: 'ES5',
+			out: 'app.js',
+			outDir: 'build',
+			emitError: true,
+			sourcemap: true,
+			removeComments: false
+		}))
+		.on('error', handleError)
+		.pipe(gulp.dest('public/js'));
+});
+
+gulp.task('min', ['typescript'], function () {
+	return gulp.src(['public/js.app.js'])
+		.pipe(uglify())
+		.pipe(rename({suffix: '.min'}))
+		.pipe(gulp.dest('public/js'));
+});
+
 gulp.task('html', function () {
 	return gulp.src('index.html')
 		.pipe(gulp.dest('public'));
-})
+});
+
+gulp.task('test', ['typescript'], function (done) {
+	karma.start({
+		configFile: __dirname + '/karma.conf.js',
+		singleRun: true
+	}, done);
+});
 
 gulp.task('watch', function() {
 	gulp.watch('javascript/*.js', ['scripts']);
 	gulp.watch('index.html', ['html']);
 
+	gulp.watch(['test/**/*Spec.js', 'src/**/*.ts'], ['test']);
+
 	// Create LiveReload server
 	livereload.listen();
 
-// Watch any files in dist/, reload on change
 	gulp.watch(['public/**']).on('change', livereload.changed); 
 });
+
+function handleError(err) {
+	console.log(err.toString());
+	this.emit('end');
+}
