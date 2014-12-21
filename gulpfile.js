@@ -29,7 +29,7 @@ gulp.task('scripts', function() {
 		.pipe(gulp.dest('public/js'));
 });
 
-gulp.task('typescript', function() {
+gulp.task('compile', function() {
 	return gulp.src(['src/app.ts'])
 		.pipe(plumber())
 		.pipe(typescript({
@@ -43,6 +43,13 @@ gulp.task('typescript', function() {
 		.on('error', handleError)
 		.pipe(gulp.dest('public/js'));
 });
+
+gulp.task('move', function () {
+	return gulp.src('src/*.ts')
+		.pipe(gulp.dest('public/src'));
+});
+
+gulp.task('typescript', ['move', 'compile']);
 
 gulp.task('min', ['typescript'], function () {
 	return gulp.src(['public/js.app.js'])

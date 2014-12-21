@@ -33,8 +33,8 @@ module Split.Engine {
         }
     }
 
-    export class Polygon {
-        constructor(public points : Point[]) {}
+    export class Polygon implements View.IDrawable {
+        constructor(private points : Point[]) {}
 
         public static fromArray(points : number[][]) {
             return new Polygon(points.map(x => new Point(x[0], x[1])));
@@ -76,6 +76,21 @@ module Split.Engine {
             });
 
             return [new Polygon(a), new Polygon(b)];
+        }
+
+        public draw(context : CanvasRenderingContext2D) {
+            context.beginPath();
+
+            var finalPoint = this.points[this.points.length - 1];
+
+            context.moveTo(finalPoint.x, finalPoint.y);
+
+            this.points.forEach(point => {
+                context.lineTo(point.x, point.y);
+            });
+
+            context.fill();
+            context.stroke();
         }
     }
 }

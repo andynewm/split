@@ -57,6 +57,16 @@ var Split;
                 });
                 return [new Polygon(a), new Polygon(b)];
             };
+            Polygon.prototype.draw = function (context) {
+                context.beginPath();
+                var finalPoint = this.points[this.points.length - 1];
+                context.moveTo(finalPoint.x, finalPoint.y);
+                this.points.forEach(function (point) {
+                    context.lineTo(point.x, point.y);
+                });
+                context.fill();
+                context.stroke();
+            };
             return Polygon;
         })();
         Engine.Polygon = Polygon;
@@ -93,30 +103,25 @@ var Split;
         })();
         var Artist = (function () {
             function Artist() {
+                var _this = this;
+                this.render = function () {
+                    _this.context.clearRect(0, 0, _this.width, _this.height);
+                    _this.drawables.forEach(function (drawable) {
+                        _this.context.save();
+                        drawable.draw(_this.context);
+                        _this.context.restore();
+                    });
+                    window.requestAnimationFrame(_this.render);
+                };
                 var canvas = document.getElementById('art');
                 this.context = canvas.getContext('2d');
+                this.width = canvas.width;
+                this.height = canvas.height;
+                this.drawables = new Bucket();
                 this.render();
             }
-            Artist.prototype.addDrawable = function (drawable) {
-                this.drawables.add(drawable);
-            };
-            Artist.prototype.render = function () {
-                var _this = this;
-                this.drawables.forEach(function (drawable) {
-                    drawable.draw(_this.context);
-                });
-                window.requestAnimationFrame(this.render);
-            };
-            Artist.prototype.drawPoly = function (polygon) {
-                var _this = this;
-                this.context.beginPath();
-                var finalPoint = polygon.points[polygon.points.length - 1];
-                this.context.moveTo(finalPoint.x, finalPoint.y);
-                polygon.points.forEach(function (point) {
-                    _this.context.lineTo(point.x, point.y);
-                });
-                this.context.fill();
-                this.context.stroke();
+            Artist.prototype.register = function (drawable) {
+                return this.drawables.add(drawable);
             };
             return Artist;
         })();
@@ -130,10 +135,37 @@ var Split;
  * Created by andy on 21/12/14.
  */
 /// <reference path="references.ts" />
-var artist = new Split.View.Artist();
-artist.drawPoly(Split.Engine.Polygon.fromArray([[10, 10], [100, 10], [10, 100]]));
-var canvas = $('#art');
-canvas.on('mousemove', function (event) {
-    console.log('%s : %s', event.offsetX, event.offsetY);
-});
+var Split;
+(function (Split) {
+    Split.run = function () {
+        var artist = new Split.View.Artist();
+        var n = 0;
+        //artist.drawPoly(Split.Engine.Polygon.fromArray([[10,10],[100,10],[10,100]]));
+        var clear = artist.register({
+            draw: function (context) {
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(40, n++);
+                context.stroke();
+            }
+        });
+        artist.register({
+            draw: function (context) {
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(x, y);
+                context.stroke();
+            }
+        });
+        var y = 0, x = 0;
+        var canvas = $('#art');
+        canvas.on('mousemove', function (event) {
+            x = event.offsetX;
+            y = event.offsetY;
+            console.log('%s : %s', event.offsetX, event.offsetY);
+        }).on('mousedown', function () {
+            clear();
+        });
+    };
+})(Split || (Split = {}));
 //# sourceMappingURL=app.js.map
