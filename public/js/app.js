@@ -16,6 +16,15 @@ var Split;
             Point.prototype.multiply = function (scalar) {
                 return new Point(this.x * scalar, this.y * scalar);
             };
+            Point.prototype.magnitudeSquared = function () {
+                return this.x * this.x + this.y * this.y;
+            };
+            Point.prototype.magnitude = function () {
+                return Math.sqrt(this.magnitudeSquared());
+            };
+            Point.prototype.normal = function () {
+                var magnitude = this.magnitude();
+            };
             return Point;
         })();
         Engine.Point = Point;
@@ -33,11 +42,13 @@ var Split;
                 return new Point((ca * bx - cb * ax) / l, (ca * by - cb * ay) / l);
             };
             Line.prototype.lengthSquared = function () {
-                var diff = this.a.subtract(this.b);
-                return diff.x * diff.x + diff.y * diff.y;
+                return this.a.subtract(this.b).magnitudeSquared();
             };
             Line.prototype.length = function () {
-                return Math.sqrt(this.lengthSquared());
+                return this.a.subtract(this.b).magnitude();
+            };
+            Line.prototype.normal = function () {
+                return this.a.subtract(this.b).normal();
             };
             return Line;
         })();

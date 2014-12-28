@@ -66,8 +66,7 @@ module Split.Engine {
         }
 
         public normal() {
-            var length = this.length();
-            return new Point(this.x / length, this.y / length);
+            return this.a.subtract(this.b).normal();
         }
     }
 
