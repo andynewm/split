@@ -1,0 +1,8 @@
+canvas {
+    cursor: crosshair;
+    border: 2px solid black;
+}
+
+body {
+    font-family: Helvetica;
+}

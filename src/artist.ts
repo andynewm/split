@@ -8,7 +8,7 @@ module Split.View {
     }
 
     export interface IDrawable {
-        draw(context : CanvasRenderingContext2D);
+        draw(context : CanvasRenderingContext2D, width: number, height : number);
     }
 
     class Bucket<T> {
@@ -58,7 +58,7 @@ module Split.View {
 
             this.drawables.forEach(drawable => {
                 this.context.save();
-                drawable.draw(this.context);
+                drawable.draw(this.context, this.width, this.height);
                 this.context.restore();
             });
 

@@ -1,9 +1,34 @@
 module Split.Engine {
-    class Point {
+    export class Point {
         constructor(public x : number, public y : number) {}
+
+        public subtract(other : Point) {
+            return new Point(this.x - other.x, this.y - other.y);
+        }
+
+        public add(other : Point) {
+            return new Point(this.x + other.x, this.y + other.y);
+        }
+
+        public multiply(scalar : number) {
+            return new Point(this.x * scalar, this.y * scalar);
+        }
+
+        public magnitudeSquared() {
+            return this.x * this.x + this.y * this.y;
+        }
+
+        public magnitude() {
+            return Math.sqrt(this.magnitudeSquared());
+        }
+
+        public normal() {
+            var magnitude = this.magnitude();
+            
+        }
     }
 
-    class Line {
+    export class Line {
         constructor(private a : Point, private b : Point) {}
 
         public getSide(point : Point) {
@@ -30,6 +55,19 @@ module Split.Engine {
                 (ca * bx - cb * ax) / l,
                 (ca * by - cb * ay) / l
             )
+        }
+
+        public lengthSquared() {
+            return this.a.subtract(this.b).magnitudeSquared();
+        }
+
+        public length() {
+            return this.a.subtract(this.b).magnitude();
+        }
+
+        public normal() {
+            var length = this.length();
+            return new Point(this.x / length, this.y / length);
         }
     }
 
@@ -88,6 +126,11 @@ module Split.Engine {
             this.points.forEach(point => {
                 context.lineTo(point.x, point.y);
             });
+
+            context.fillStyle = 'rgba(200, 190, 50, 0.6)';
+            context.strokeStyle = 'rgba(200, 190, 50, 0.9)';
+
+            context.lineWidth = 2;
 
             context.fill();
             context.stroke();

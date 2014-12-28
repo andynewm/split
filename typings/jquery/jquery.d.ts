@@ -188,13 +188,13 @@ interface JQueryXHR extends XMLHttpRequest, JQueryPromise<any> {
  */
 interface JQueryCallback {
     /**
-     * Add a callback or a collection of callbacks to a callback list.
+     * add a callback or a collection of callbacks to a callback list.
      * 
      * @param callbacks A function, or array of functions, that are to be added to the callback list.
      */
     add(callbacks: Function): JQueryCallback;
     /**
-     * Add a callback or a collection of callbacks to a callback list.
+     * add a callback or a collection of callbacks to a callback list.
      * 
      * @param callbacks A function, or array of functions, that are to be added to the callback list.
      */
@@ -271,28 +271,28 @@ interface JQueryCallback {
  */
 interface JQueryGenericPromise<T> {
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
      */
     then<U>(doneFilter: (value: T) => U, failFilter?: (reason: any) => U): JQueryGenericPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
      */
     then<U>(doneFilter: (value: T) => JQueryGenericPromise<U>, failFilter?: (reason: any) => U): JQueryGenericPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
      */
     then<U>(doneFilter: (value: T) => U, failFilter?: (reason: any) => JQueryGenericPromise<U>): JQueryGenericPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -338,7 +338,7 @@ interface JQueryPromise<T> {
      */
 	fail: JQueryPromiseOperator<any, T>;
     /**
-     * Add handlers to be called when the Deferred object generates progress notifications.
+     * add handlers to be called when the Deferred object generates progress notifications.
      * 
      * @param progressCallbacks A function, or array of functions, to be called when the Deferred generates progress notifications.
      */
@@ -354,7 +354,7 @@ interface JQueryPromise<T> {
     pipe(doneFilter?: (x: any) => any, failFilter?: (x: any) => any, progressFilter?: (x: any) => any): JQueryPromise<any>;
 
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -362,7 +362,7 @@ interface JQueryPromise<T> {
      */
     then<U>(doneFilter: (value: T) => U, failFilter?: (...reasons: any[]) => U, progressFilter?: (...progression: any[]) => any): JQueryPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -370,7 +370,7 @@ interface JQueryPromise<T> {
      */
     then<U>(doneFilter: (value: T) => JQueryGenericPromise<U>, failFilter?: (...reasons: any[]) => U, progressFilter?: (...progression: any[]) => any): JQueryPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -378,7 +378,7 @@ interface JQueryPromise<T> {
      */
     then<U>(doneFilter: (value: T) => U, failFilter?: (...reasons: any[]) => JQueryGenericPromise<U>, progressFilter?: (...progression: any[]) => any): JQueryPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -388,7 +388,7 @@ interface JQueryPromise<T> {
 
     // Because JQuery Promises Suck
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -396,7 +396,7 @@ interface JQueryPromise<T> {
      */
     then<U>(doneFilter: (...values: any[]) => U, failFilter?: (...reasons: any[]) => U, progressFilter?: (...progression: any[]) => any): JQueryPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -404,7 +404,7 @@ interface JQueryPromise<T> {
      */
     then<U>(doneFilter: (...values: any[]) => JQueryGenericPromise<U>, failFilter?: (...reasons: any[]) => U, progressFilter?: (...progression: any[]) => any): JQueryPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -412,7 +412,7 @@ interface JQueryPromise<T> {
      */
     then<U>(doneFilter: (...values: any[]) => U, failFilter?: (...reasons: any[]) => JQueryGenericPromise<U>, progressFilter?: (...progression: any[]) => any): JQueryPromise<U>;
     /**
-     * Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+     * add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
      * 
      * @param doneFilter A function that is called when the Deferred is resolved.
      * @param failFilter An optional function that is called when the Deferred is rejected.
@@ -426,7 +426,7 @@ interface JQueryPromise<T> {
  */
 interface JQueryDeferred<T> extends JQueryPromise<T> {
     /**
-     * Add handlers to be called when the Deferred object is either resolved or rejected.
+     * add handlers to be called when the Deferred object is either resolved or rejected.
      * 
      * @param alwaysCallbacks1 A function, or array of functions, that is called when the Deferred is resolved or rejected.
      * @param alwaysCallbacks2 Optional additional functions, or arrays of functions, that are called when the Deferred is resolved or rejected.
@@ -436,7 +436,7 @@ interface JQueryDeferred<T> extends JQueryPromise<T> {
     always(alwaysCallbacks1?: JQueryPromiseCallback<T>, ...alwaysCallbacks2: any[]): JQueryDeferred<T>;
     always(alwaysCallbacks1?: JQueryPromiseCallback<T>[], ...alwaysCallbacks2: any[]): JQueryDeferred<T>;
     /**
-     * Add handlers to be called when the Deferred object is resolved.
+     * add handlers to be called when the Deferred object is resolved.
      * 
      * @param doneCallbacks1 A function, or array of functions, that are called when the Deferred is resolved.
      * @param doneCallbacks2 Optional additional functions, or arrays of functions, that are called when the Deferred is resolved.
@@ -446,7 +446,7 @@ interface JQueryDeferred<T> extends JQueryPromise<T> {
     done(doneCallbacks1?: JQueryPromiseCallback<T>, ...doneCallbacks2: any[]): JQueryDeferred<T>;
     done(doneCallbacks1?: JQueryPromiseCallback<T>[], ...doneCallbacks2: any[]): JQueryDeferred<T>;
     /**
-     * Add handlers to be called when the Deferred object is rejected.
+     * add handlers to be called when the Deferred object is rejected.
      * 
      * @param failCallbacks1 A function, or array of functions, that are called when the Deferred is rejected.
      * @param failCallbacks2 Optional additional functions, or arrays of functions, that are called when the Deferred is rejected.
@@ -456,7 +456,7 @@ interface JQueryDeferred<T> extends JQueryPromise<T> {
     fail(failCallbacks1?: JQueryPromiseCallback<T>, ...failCallbacks2: any[]): JQueryDeferred<T>;
     fail(failCallbacks1?: JQueryPromiseCallback<T>[], ...failCallbacks2: any[]): JQueryDeferred<T>;
     /**
-     * Add handlers to be called when the Deferred object generates progress notifications.
+     * add handlers to be called when the Deferred object generates progress notifications.
      * 
      * @param progressCallbacks A function, or array of functions, to be called when the Deferred generates progress notifications.
      */
@@ -1345,7 +1345,7 @@ interface JQuery {
     addClass(func: (index: number, className: string) => string): JQuery;
 
     /**
-     * Add the previous set of elements on the stack to the current set, optionally filtered by a selector.
+     * add the previous set of elements on the stack to the current set, optionally filtered by a selector.
      */
     addBack(selector?: string): JQuery;
 
@@ -1481,20 +1481,20 @@ interface JQuery {
     removeProp(propertyName: string): JQuery;
 
     /**
-     * Add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the switch argument.
+     * add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the switch argument.
      *
      * @param className One or more class names (separated by spaces) to be toggled for each element in the matched set.
      * @param swtch A Boolean (not just truthy/falsy) value to determine whether the class should be added or removed.
      */
     toggleClass(className: string, swtch?: boolean): JQuery;
     /**
-     * Add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the switch argument.
+     * add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the switch argument.
      *
      * @param swtch A boolean value to determine whether the class should be added or removed.
      */
     toggleClass(swtch?: boolean): JQuery;
     /**
-     * Add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the switch argument.
+     * add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the switch argument.
      *
      * @param func A function that returns class names to be toggled in the class attribute of each element in the matched set. Receives the index position of the element in the set, the old class value, and the switch as arguments.
      * @param swtch A boolean value to determine whether the class should be added or removed.
@@ -3013,13 +3013,13 @@ interface JQuery {
     error(eventData: any, handler: (eventObject: JQueryEventObject) => any): JQuery;
 
     /**
-     * Add a collection of DOM elements onto the jQuery stack.
+     * add a collection of DOM elements onto the jQuery stack.
      * 
      * @param elements An array of elements to push onto the stack and make into a new jQuery object.
      */
     pushStack(elements: any[]): JQuery;
     /**
-     * Add a collection of DOM elements onto the jQuery stack.
+     * add a collection of DOM elements onto the jQuery stack.
      * 
      * @param elements An array of elements to push onto the stack and make into a new jQuery object.
      * @param name The name of a jQuery method that generated the array of elements.
@@ -3558,26 +3558,26 @@ interface JQuery {
     [index: number]: HTMLElement;
 
     /**
-     * Add elements to the set of matched elements.
+     * add elements to the set of matched elements.
      * 
      * @param selector A string representing a selector expression to find additional elements to add to the set of matched elements.
      * @param context The point in the document at which the selector should begin matching; similar to the context argument of the $(selector, context) method.
      */
     add(selector: string, context?: Element): JQuery;
     /**
-     * Add elements to the set of matched elements.
+     * add elements to the set of matched elements.
      * 
      * @param elements One or more elements to add to the set of matched elements.
      */
     add(...elements: Element[]): JQuery;
     /**
-     * Add elements to the set of matched elements.
+     * add elements to the set of matched elements.
      * 
      * @param html An HTML fragment to add to the set of matched elements.
      */
     add(html: string): JQuery;
     /**
-     * Add elements to the set of matched elements.
+     * add elements to the set of matched elements.
      * 
      * @param obj An existing jQuery object to add to the set of matched elements.
      */

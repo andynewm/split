@@ -7,8 +7,18 @@ var Split;
                 this.x = x;
                 this.y = y;
             }
+            Point.prototype.subtract = function (other) {
+                return new Point(this.x - other.x, this.y - other.y);
+            };
+            Point.prototype.add = function (other) {
+                return new Point(this.x + other.x, this.y + other.y);
+            };
+            Point.prototype.multiply = function (scalar) {
+                return new Point(this.x * scalar, this.y * scalar);
+            };
             return Point;
         })();
+        Engine.Point = Point;
         var Line = (function () {
             function Line(a, b) {
                 this.a = a;
@@ -22,8 +32,16 @@ var Split;
                 var ax = this.a.x - this.b.x, ay = this.a.y - this.b.y, bx = other.a.x - other.b.x, by = other.a.y - other.b.y, ca = this.a.x * this.b.y - this.a.y * this.b.x, cb = other.a.x * other.b.y - other.a.y * other.b.x, l = ax * by - ay * bx;
                 return new Point((ca * bx - cb * ax) / l, (ca * by - cb * ay) / l);
             };
+            Line.prototype.lengthSquared = function () {
+                var diff = this.a.subtract(this.b);
+                return diff.x * diff.x + diff.y * diff.y;
+            };
+            Line.prototype.length = function () {
+                return Math.sqrt(this.lengthSquared());
+            };
             return Line;
         })();
+        Engine.Line = Line;
         var Polygon = (function () {
             function Polygon(points) {
                 this.points = points;
@@ -64,6 +82,9 @@ var Split;
                 this.points.forEach(function (point) {
                     context.lineTo(point.x, point.y);
                 });
+                context.fillStyle = 'rgba(200, 190, 50, 0.6)';
+                context.strokeStyle = 'rgba(200, 190, 50, 0.9)';
+                context.lineWidth = 2;
                 context.fill();
                 context.stroke();
             };
@@ -108,7 +129,7 @@ var Split;
                     _this.context.clearRect(0, 0, _this.width, _this.height);
                     _this.drawables.forEach(function (drawable) {
                         _this.context.save();
-                        drawable.draw(_this.context);
+                        drawable.draw(_this.context, _this.width, _this.height);
                         _this.context.restore();
                     });
                     window.requestAnimationFrame(_this.render);
@@ -137,34 +158,70 @@ var Split;
 /// <reference path="references.ts" />
 var Split;
 (function (Split) {
+    var Thing = (function () {
+        function Thing(start) {
+            this.start = start;
+            this.set(start.x, start.y);
+        }
+        Thing.prototype.set = function (x, y) {
+            this.end = new Split.Engine.Point(x, y);
+        };
+        Thing.prototype.getLine = function () {
+            return new Split.Engine.Line(this.start, this.end);
+        };
+        Thing.prototype.draw = function (context, width, height) {
+            var pre = this.preExtend(), post = this.postExtend();
+            context.beginPath();
+            context.moveTo(pre.x, pre.y);
+            context.lineTo(post.x, post.y);
+            context.lineWidth = 1;
+            context.stroke();
+            context.beginPath();
+            context.moveTo(this.start.x, this.start.y);
+            context.lineTo(this.end.x, this.end.y);
+            context.lineWidth = 3;
+            context.stroke();
+        };
+        Thing.prototype.preExtend = function () {
+            return this.start.subtract(this.end).multiply(1000).add(this.start);
+        };
+        Thing.prototype.postExtend = function () {
+            return this.end.subtract(this.start).multiply(1000).add(this.end);
+        };
+        return Thing;
+    })();
     Split.run = function () {
         var artist = new Split.View.Artist();
         var n = 0;
-        //artist.drawPoly(Split.Engine.Polygon.fromArray([[10,10],[100,10],[10,100]]));
-        var clear = artist.register({
-            draw: function (context) {
-                context.beginPath();
-                context.moveTo(0, 0);
-                context.lineTo(40, n++);
-                context.stroke();
-            }
+        var polygon;
+        var removePolygon;
+        $.get('puzzles/1.json').then(function (puzzle) {
+            polygon = Split.Engine.Polygon.fromArray(puzzle.points);
+            removePolygon = artist.register(polygon);
         });
-        artist.register({
-            draw: function (context) {
-                context.beginPath();
-                context.moveTo(0, 0);
-                context.lineTo(x, y);
-                context.stroke();
-            }
-        });
-        var y = 0, x = 0;
+        //artist.register(Split.Engine.Polygon.fromArray([[10,10],[100,10],[10,100]]));
         var canvas = $('#art');
+        var removeThing;
+        var thing;
         canvas.on('mousemove', function (event) {
-            x = event.offsetX;
-            y = event.offsetY;
-            console.log('%s : %s', event.offsetX, event.offsetY);
-        }).on('mousedown', function () {
-            clear();
+            if (thing) {
+                thing.set(event.offsetX, event.offsetY);
+            }
+        }).on('mousedown', function (event) {
+            thing = new Thing(new Split.Engine.Point(event.offsetX, event.offsetY));
+            removeThing = artist.register(thing);
+        }).on('mouseup mouseleave', function () {
+            if (removeThing) {
+                removePolygon();
+                var newPolygons = polygon.split(thing.getLine());
+                newPolygons.forEach(function (polygon) {
+                    artist.register(polygon);
+                    console.log(polygon.area());
+                });
+                removeThing();
+                removeThing = null;
+            }
+            thing = null;
         });
     };
 })(Split || (Split = {}));
