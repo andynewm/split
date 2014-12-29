@@ -71,10 +71,13 @@ module Split.Engine {
     }
 
     export class Polygon implements View.IDrawable {
-        constructor(private points : Point[]) {}
+        constructor(private points : Point[], private colour : string) {}
 
-        public static fromArray(points : number[][]) {
-            return new Polygon(points.map(x => new Point(x[0], x[1])));
+        public static fromArray(points : number[][], colour : string) {
+            return new Polygon(
+                points.map(
+                    x => new Point(x[0], x[1])),
+                colour);
         }
 
         public area() {
@@ -112,7 +115,7 @@ module Split.Engine {
                 previousSide = side;
             });
 
-            return [new Polygon(a), new Polygon(b)];
+            return [new Polygon(a, this.colour), new Polygon(b, this.colour)];
         }
 
         public draw(context : CanvasRenderingContext2D) {
@@ -126,7 +129,7 @@ module Split.Engine {
                 context.lineTo(point.x, point.y);
             });
 
-            context.fillStyle = 'rgba(200, 190, 50, 0.6)';
+            context.fillStyle = this.colour;
             context.strokeStyle = 'rgba(200, 190, 50, 0.9)';
 
             context.lineWidth = 2;

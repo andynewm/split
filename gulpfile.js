@@ -36,11 +36,10 @@ gulp.task('compile', function() {
 			target: 'ES5',
 			out: 'app.js',
 			outDir: 'build',
-			emitError: true,
+			emitError: false,
 			sourcemap: true,
 			removeComments: false
 		}))
-		.on('error', handleError)
 		.pipe(gulp.dest('public/js'));
 });
 
@@ -81,8 +80,3 @@ gulp.task('watch', function() {
 
 	gulp.watch(['public/**']).on('change', livereload.changed); 
 });
-
-function handleError(err) {
-	console.log(err.toString());
-	this.emit('end');
-}

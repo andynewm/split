@@ -54,11 +54,12 @@ var Split;
         })();
         Engine.Line = Line;
         var Polygon = (function () {
-            function Polygon(points) {
+            function Polygon(points, colour) {
                 this.points = points;
+                this.colour = colour;
             }
-            Polygon.fromArray = function (points) {
-                return new Polygon(points.map(function (x) { return new Point(x[0], x[1]); }));
+            Polygon.fromArray = function (points, colour) {
+                return new Polygon(points.map(function (x) { return new Point(x[0], x[1]); }), colour);
             };
             Polygon.prototype.area = function () {
                 var previousPoint = this.points[this.points.length - 1];
@@ -84,7 +85,7 @@ var Split;
                     previousPoint = point;
                     previousSide = side;
                 });
-                return [new Polygon(a), new Polygon(b)];
+                return [new Polygon(a, this.colour), new Polygon(b, this.colour)];
             };
             Polygon.prototype.draw = function (context) {
                 context.beginPath();
@@ -93,7 +94,7 @@ var Split;
                 this.points.forEach(function (point) {
                     context.lineTo(point.x, point.y);
                 });
-                context.fillStyle = 'rgba(200, 190, 50, 0.6)';
+                context.fillStyle = this.colour;
                 context.strokeStyle = 'rgba(200, 190, 50, 0.9)';
                 context.lineWidth = 2;
                 context.fill();
@@ -207,7 +208,7 @@ var Split;
         var polygon;
         var removePolygon;
         $.get('puzzles/1.json').then(function (puzzle) {
-            polygon = Split.Engine.Polygon.fromArray(puzzle.points);
+            polygon = Split.Engine.Polygon.fromArray(puzzle.points, '#888');
             removePolygon = artist.register(polygon);
         });
         //artist.register(Split.Engine.Polygon.fromArray([[10,10],[100,10],[10,100]]));

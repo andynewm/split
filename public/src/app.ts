@@ -58,7 +58,7 @@ module Split {
 
         $.get('puzzles/1.json')
             .then(puzzle => {
-                polygon = Engine.Polygon.fromArray(puzzle.points);
+                polygon = Engine.Polygon.fromArray(puzzle.points, '#888');
                 removePolygon = artist.register(polygon)
             });
 
