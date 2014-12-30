@@ -16,6 +16,10 @@ var Split;
             Point.prototype.multiply = function (scalar) {
                 return new Point(this.x * scalar, this.y * scalar);
             };
+            Point.prototype.shift = function (other) {
+                this.x += other.x;
+                this.y += other.y;
+            };
             Point.prototype.magnitudeSquared = function () {
                 return this.x * this.x + this.y * this.y;
             };
@@ -24,6 +28,15 @@ var Split;
             };
             Point.prototype.normal = function () {
                 var magnitude = this.magnitude();
+                return new Point(this.x / magnitude, this.y / magnitude);
+            };
+            Point.prototype.clone = function () {
+                return new Point(this.x, this.y);
+            };
+            Point.prototype.rotate = function () {
+                var t = this.x;
+                this.x = -this.y;
+                this.y = t;
             };
             return Point;
         })();
@@ -78,8 +91,8 @@ var Split;
                     var side = line.getSide(point);
                     if (previousSide !== side) {
                         var intersect = line.intersection(new Line(point, previousPoint));
-                        a.push(intersect);
-                        b.push(intersect);
+                        a.push(intersect.clone());
+                        b.push(intersect.clone());
                     }
                     (side ? a : b).push(point);
                     previousPoint = point;
@@ -225,7 +238,13 @@ var Split;
         }).on('mouseup mouseleave', function () {
             if (removeThing) {
                 removePolygon();
-                var newPolygons = polygon.split(thing.getLine());
+                var splitLine = thing.getLine();
+                var newPolygons = polygon.split(splitLine);
+                var shiftA = splitLine.normal().multiply(20);
+                shiftA.rotate();
+                var shiftB = shiftA.multiply(-1);
+                newPolygons[0].points.forEach(function (point) { return point.shift(shiftA); });
+                newPolygons[1].points.forEach(function (point) { return point.shift(shiftB); });
                 newPolygons.forEach(function (polygon) {
                     artist.register(polygon);
                     console.log(polygon.area());

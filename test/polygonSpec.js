@@ -27,3 +27,23 @@ describe('Polygon', function () {
     });
 
 });
+
+describe('Point', function () {
+
+    describe('Magnitude function', function () {
+
+        it('should give 0 for origin', function () {
+            var origin = new Split.Engine.Point(0, 0);
+
+            expect(origin.magnitude()).toBe(0);
+        });
+
+        it('should work for a 345', function () {
+            var point = new Split.Engine.Point(3, 4);
+
+            expect(point.magnitude()).toBe(5);
+        });
+
+    });
+
+});

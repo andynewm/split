@@ -14,6 +14,11 @@ module Split.Engine {
             return new Point(this.x * scalar, this.y * scalar);
         }
 
+        public shift(other : Point) {
+            this.x += other.x;
+            this.y += other.y;
+        }
+
         public magnitudeSquared() {
             return this.x * this.x + this.y * this.y;
         }
@@ -24,7 +29,18 @@ module Split.Engine {
 
         public normal() {
             var magnitude = this.magnitude();
-            
+
+            return new Point(this.x / magnitude, this.y / magnitude);
+        }
+
+        public clone() {
+            return new Point(this.x, this.y);
+        }
+
+        public rotate() {
+            var t = this.x;
+            this.x = -this.y;
+            this.y = t;
         }
     }
 
@@ -71,7 +87,7 @@ module Split.Engine {
     }
 
     export class Polygon implements View.IDrawable {
-        constructor(private points : Point[], private colour : string) {}
+        constructor(public points : Point[], private colour : string) {}
 
         public static fromArray(points : number[][], colour : string) {
             return new Polygon(
@@ -105,8 +121,8 @@ module Split.Engine {
                 if (previousSide !== side) {
                     var intersect = line.intersection(new Line(point, previousPoint));
 
-                    a.push(intersect);
-                    b.push(intersect);
+                    a.push(intersect.clone());
+                    b.push(intersect.clone());
                 }
 
                 (side ? a : b).push(point);

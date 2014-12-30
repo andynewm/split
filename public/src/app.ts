@@ -41,11 +41,17 @@ module Split {
         }
 
         private preExtend() {
-            return this.start.subtract(this.end).multiply(1000).add(this.start);
+            return this.start
+                .subtract(this.end)
+                .multiply(1000)
+                .add(this.start);
         }
 
         private postExtend() {
-            return this.end.subtract(this.start).multiply(1000).add(this.end);
+            return this.end
+                .subtract(this.start)
+                .multiply(1000)
+                .add(this.end);
         }
     }
     export var run = () => {
@@ -84,9 +90,26 @@ module Split {
                 if (removeThing) {
                     removePolygon();
 
-                    var newPolygons = polygon.split(thing.getLine());
+                    var splitLine = thing.getLine();
 
-                    newPolygons.forEach(polygon => { artist.register(polygon); console.log(polygon.area()) });
+                    var newPolygons = polygon.split(splitLine);
+
+                    var shiftA = splitLine.normal().multiply(20);
+                    
+                    shiftA.rotate();
+
+                    var shiftB = shiftA.multiply(-1);
+
+                    newPolygons[0].points.forEach(point =>
+                        point.shift(shiftA));
+
+                    newPolygons[1].points.forEach(point =>
+                        point.shift(shiftB));
+
+                    newPolygons.forEach(polygon => {
+                        artist.register(polygon);
+                        console.log(polygon.area());
+                    });
 
                     removeThing();
                     removeThing = null;
