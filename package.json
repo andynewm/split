@@ -4,7 +4,9 @@
   "description": "javascript game",
   "main": "art.js",
   "dependencies": {
-    "express": "~4.10.6"
+    "express": "~4.10.6",
+    "body-parser": "~1.10.1",
+    "fs": "0.0.2"
   },
   "devDependencies": {
     "del": "^1.1.0",
