@@ -53,6 +53,10 @@ module Split.View {
             return this.drawables.add(drawable);
         }
 
+        private clear() {
+            // grid
+        }
+
         private render = () => {
             this.context.clearRect(0, 0, this.width, this.height);
 

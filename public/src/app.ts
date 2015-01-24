@@ -54,6 +54,34 @@ module Split {
                 .add(this.end);
         }
     }
+
+    interface TweenArgs {
+        obj : any;
+        property : string;
+        target : number;
+        time : number;
+        delay : number;
+        form : (number) => number;
+    }
+
+    function tween(args : TweenArgs) {
+        var startValue = args.obj[args.property];
+        var startTime = Date.now();
+
+        function go() {
+            var elapsedTime = Date.now() - startTime;
+
+            args.obj[args.property] =
+                startValue + (args.target - startValue) * (elapsedTime / args.time);
+
+            if (elapsedTime < args.time) {
+                window.requestAnimationFrame(go);
+            }
+        }
+
+        window.setTimeout(go, args.delay || 0);
+    }
+
     export var run = () => {
         var artist = new View.Artist();
 
@@ -62,13 +90,11 @@ module Split {
         var polygon : Engine.Polygon;
         var removePolygon : () => void;
 
-        $.get('puzzles/1.json')
+        $.get('puzzles/2.json')
             .then(puzzle => {
                 polygon = Engine.Polygon.fromArray(puzzle.points, '#888');
                 removePolygon = artist.register(polygon)
             });
-
-        //artist.register(Split.Engine.Polygon.fromArray([[10,10],[100,10],[10,100]]));
 
         var canvas = $('#art');
 
@@ -101,10 +127,36 @@ module Split {
                     var shiftB = shiftA.multiply(-1);
 
                     newPolygons[0].points.forEach(point =>
-                        point.shift(shiftA));
+                    {
+                        tween(<TweenArgs>{
+                            obj: point,
+                            property: 'x',
+                            target: point.x + shiftA.x,
+                            time: 1000
+                        });
+                        tween(<TweenArgs>{
+                            obj: point,
+                            property: 'y',
+                            target: point.y + shiftA.y,
+                            time: 1000
+                        });
+                    });
 
                     newPolygons[1].points.forEach(point =>
-                        point.shift(shiftB));
+                    {
+                        tween(<TweenArgs>{
+                            obj: point,
+                            property: 'x',
+                            target: point.x + shiftB.x,
+                            time: 1000
+                        });
+                        tween(<TweenArgs>{
+                            obj: point,
+                            property: 'y',
+                            target: point.y + shiftB.y,
+                            time: 1000
+                        });
+                    });
 
                     newPolygons.forEach(polygon => {
                         artist.register(polygon);

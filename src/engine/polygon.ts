@@ -134,6 +134,11 @@ module Split.Engine {
             return [new Polygon(a, this.colour), new Polygon(b, this.colour)];
         }
 
+        public centre() {
+            return this.points.reduce((sum, point) =>
+                sum.add(point)).multiply(1/this.points.length);
+        }
+
         public draw(context : CanvasRenderingContext2D) {
             context.beginPath();
 
@@ -151,7 +156,14 @@ module Split.Engine {
             context.lineWidth = 2;
 
             context.fill();
-            context.stroke();
+
+            context.fillStyle = 'white';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+
+            var centre = this.centre();
+
+            context.fillText(this.area() + 'px\u00B2', centre.x, centre.y);
         }
     }
 }
