@@ -100,6 +100,9 @@ var Split;
                 });
                 return [new Polygon(a, this.colour), new Polygon(b, this.colour)];
             };
+            Polygon.prototype.centre = function () {
+                return this.points.reduce(function (sum, point) { return sum.add(point); }).multiply(1 / this.points.length);
+            };
             Polygon.prototype.draw = function (context) {
                 context.beginPath();
                 var finalPoint = this.points[this.points.length - 1];
@@ -110,6 +113,11 @@ var Split;
                 context.fillStyle = this.colour;
                 context.lineWidth = 2;
                 context.fill();
+                context.fillStyle = 'white';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                var centre = this.centre();
+                context.fillText(this.area() + 'px\u00B2', centre.x, centre.y);
             };
             return Polygon;
         })();
@@ -167,6 +175,9 @@ var Split;
             Artist.prototype.register = function (drawable) {
                 return this.drawables.add(drawable);
             };
+            Artist.prototype.clear = function () {
+                // grid
+            };
             return Artist;
         })();
         View.Artist = Artist;
@@ -213,16 +224,27 @@ var Split;
         };
         return Thing;
     })();
+    function tween(args) {
+        var startValue = args.obj[args.property];
+        var startTime = Date.now();
+        function go() {
+            var elapsedTime = Date.now() - startTime;
+            args.obj[args.property] = startValue + (args.target - startValue) * (elapsedTime / args.time);
+            if (elapsedTime < args.time) {
+                window.requestAnimationFrame(go);
+            }
+        }
+        window.setTimeout(go, args.delay || 0);
+    }
     Split.run = function () {
         var artist = new Split.View.Artist();
         var n = 0;
         var polygon;
         var removePolygon;
-        $.get('puzzles/1.json').then(function (puzzle) {
+        $.get('puzzles/2.json').then(function (puzzle) {
             polygon = Split.Engine.Polygon.fromArray(puzzle.points, '#888');
             removePolygon = artist.register(polygon);
         });
-        //artist.register(Split.Engine.Polygon.fromArray([[10,10],[100,10],[10,100]]));
         var canvas = $('#art');
         var removeThing;
         var thing;
@@ -241,8 +263,34 @@ var Split;
                 var shiftA = splitLine.normal().multiply(20);
                 shiftA.rotate();
                 var shiftB = shiftA.multiply(-1);
-                newPolygons[0].points.forEach(function (point) { return point.shift(shiftA); });
-                newPolygons[1].points.forEach(function (point) { return point.shift(shiftB); });
+                newPolygons[0].points.forEach(function (point) {
+                    tween({
+                        obj: point,
+                        property: 'x',
+                        target: point.x + shiftA.x,
+                        time: 1000
+                    });
+                    tween({
+                        obj: point,
+                        property: 'y',
+                        target: point.y + shiftA.y,
+                        time: 1000
+                    });
+                });
+                newPolygons[1].points.forEach(function (point) {
+                    tween({
+                        obj: point,
+                        property: 'x',
+                        target: point.x + shiftB.x,
+                        time: 1000
+                    });
+                    tween({
+                        obj: point,
+                        property: 'y',
+                        target: point.y + shiftB.y,
+                        time: 1000
+                    });
+                });
                 newPolygons.forEach(function (polygon) {
                     artist.register(polygon);
                     console.log(polygon.area());
