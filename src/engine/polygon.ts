@@ -146,12 +146,10 @@ module Split.Engine {
             });
 
             context.fillStyle = this.colour;
-            context.strokeStyle = 'rgba(200, 190, 50, 0.9)';
 
             context.lineWidth = 2;
 
             context.fill();
-            context.stroke();
         }
     }
 }
